@@ -3,28 +3,28 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "billingApp": {
+    "movieassesmentfrontheroku": {
       "projectType": "application",
       "schematics": {},
-      "root": "projects/billingApp",
-      "sourceRoot": "projects/billingApp/src",
+      "root": "projects/movieassesmentfrontheroku",
+      "sourceRoot": "projects/movieassesmentfrontheroku/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/billingApp",
-            "index": "projects/billingApp/src/index.html",
-            "main": "projects/billingApp/src/main.ts",
-            "polyfills": "projects/billingApp/src/polyfills.ts",
-            "tsConfig": "projects/billingApp/tsconfig.app.json",
+            "outputPath": "dist/movieassesmentfrontheroku",
+            "index": "projects/movieassesmentfrontheroku/src/index.html",
+            "main": "projects/movieassesmentfrontheroku/src/main.ts",
+            "polyfills": "projects/movieassesmentfrontheroku/src/polyfills.ts",
+            "tsConfig": "projects/movieassesmentfrontheroku/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "projects/billingApp/src/favicon.ico",
-              "projects/billingApp/src/assets"
+              "projects/movieassesmentfrontheroku/src/favicon.ico",
+              "projects/movieassesmentfrontheroku/src/assets"
             ],
             "styles": [
-              "projects/billingApp/src/styles.css"
+              "projects/movieassesmentfrontheroku/src/styles.css"
             ],
             "scripts": []
           },
@@ -32,8 +32,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "projects/billingApp/src/environments/environment.ts",
-                  "with": "projects/billingApp/src/environments/environment.prod.ts"
+                  "replace": "projects/movieassesmentfrontheroku/src/environments/environment.ts",
+                  "with": "projects/movieassesmentfrontheroku/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -62,33 +62,33 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "billingApp:build"
+            "browserTarget": "movieassesmentfrontheroku:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "billingApp:build:production"
+              "browserTarget": "movieassesmentfrontheroku:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "billingApp:build"
+            "browserTarget": "movieassesmentfrontheroku:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/billingApp/src/test.ts",
-            "polyfills": "projects/billingApp/src/polyfills.ts",
-            "tsConfig": "projects/billingApp/tsconfig.spec.json",
-            "karmaConfig": "projects/billingApp/karma.conf.js",
+            "main": "projects/movieassesmentfrontheroku/src/test.ts",
+            "polyfills": "projects/movieassesmentfrontheroku/src/polyfills.ts",
+            "tsConfig": "projects/movieassesmentfrontheroku/tsconfig.spec.json",
+            "karmaConfig": "projects/movieassesmentfrontheroku/karma.conf.js",
             "assets": [
-              "projects/billingApp/src/favicon.ico",
-              "projects/billingApp/src/assets"
+              "projects/movieassesmentfrontheroku/src/favicon.ico",
+              "projects/movieassesmentfrontheroku/src/assets"
             ],
             "styles": [
-              "projects/billingApp/src/styles.css"
+              "projects/movieassesmentfrontheroku/src/styles.css"
             ],
             "scripts": []
           }
@@ -97,9 +97,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/billingApp/tsconfig.app.json",
-              "projects/billingApp/tsconfig.spec.json",
-              "projects/billingApp/e2e/tsconfig.json"
+              "projects/movieassesmentfrontheroku/tsconfig.app.json",
+              "projects/movieassesmentfrontheroku/tsconfig.spec.json",
+              "projects/movieassesmentfrontheroku/e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -109,16 +109,16 @@
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "projects/billingApp/e2e/protractor.conf.js",
-            "devServerTarget": "billingApp:serve"
+            "protractorConfig": "projects/movieassesmentfrontheroku/e2e/protractor.conf.js",
+            "devServerTarget": "movieassesmentfrontheroku:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "billingApp:serve:production"
+              "devServerTarget": "movieassesmentfrontheroku:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "billingApp"
+  "defaultProject": "movieassesmentfrontheroku"
 }

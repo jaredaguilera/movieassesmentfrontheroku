@@ -8,10 +8,10 @@
   "files": [],
   "references": [
     {
-      "path": "./projects/billingApp/tsconfig.app.json"
+      "path": "./projects/movieassesmentfrontheroku/tsconfig.spec.json"
     },
     {
-      "path": "./projects/billingApp/tsconfig.spec.json"
+      "path": "./projects/movieassesmentfrontheroku/tsconfig.spec.json"
     }
 ]
 }
