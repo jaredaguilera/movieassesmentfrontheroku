@@ -1,0 +1,22 @@
+<div class="container" style="margin-top: 70px;">
+  <table class="table ">
+    <thead>
+      <tr>
+        <th scope="col">Posicion</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Poster</th>
+        <th scope="col">Calificacion </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let movie of movies; index as i">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ movie.nombrePelicula }}</td>
+        <td>
+          <img src="{{movie.poster}}" style="width: 100px;" alt="..." >
+        </td>
+        <td>{{ movie.promedio | number:'1.0-0'}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

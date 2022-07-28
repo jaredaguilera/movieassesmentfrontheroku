@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="assets/icon.png"><img style="float: left; margin-right: 15px;" src="assets/icon.png"  width="65" height="65" ></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link active" routerLink="/init">Opinion</a>
+        </li>
+        <li class="nav-item" *ngIf="auth.user$ | async as user" routerLinkActive="active">
+          <a class="nav-link active" routerLink="/home">Calificar</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <ul>
+        <a *ngIf="auth.user$ | async as user" routerLink="/info">
+          <img  class="rounded-circle z-depth-2" style=" height: 50px; width: 50px; margin-right: 5px;" alt="Responsive image" src="{{user.picture}}"
+            data-holder-rendered="true">
+        </a>
+        <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+          <button class="btn btn-danger" (click)="logout()">
+           Cerrar Session
+          </button>
+        </ng-container>
+
+        <ng-template #loggedOut >
+          <button class="btn btn-primary" (click)="login()"> Iniciar Session</button>
+        </ng-template>
+        </ul>
+      </form>
+    </div>
+  </div>
+</nav>

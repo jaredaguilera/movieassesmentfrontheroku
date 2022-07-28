@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  basePath: 'https://movieassesmentheroku.herokuapp.com/',
+  basePath: 'https://movieassessmentheroku.herokuapp.com',
   basePathImdb: 'https://moviedataimdbheroku.herokuapp.com'
 };
 

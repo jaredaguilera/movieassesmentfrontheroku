@@ -143,10 +143,10 @@ export class MovieAssessmentService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listUsingGET(observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public listUsingGET(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public listUsingGET(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public listUsingGET(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public listUsingGET(idUser?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public listUsingGET(idUser?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public listUsingGET(idUser?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public listUsingGET(idUser?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -164,12 +164,18 @@ export class MovieAssessmentService {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (idUser !== undefined && idUser !== null) {
+            queryParameters = queryParameters.set('optionalIdUser', <any>idUser);
+        }
+
         // to determine the Content-Type header
         const consumes: string[] = [
         ];
 
         return this.httpClient.get<any>(`${this.basePath}/movieassessment/getTotalMoviesRated`,
             {
+                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -187,10 +193,10 @@ export class MovieAssessmentService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public postUsingPOST(idMovie: string, idUser: number, rating: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public postUsingPOST(idMovie: string, idUser: number, rating: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public postUsingPOST(idMovie: string, idUser: number, rating: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public postUsingPOST(idMovie: string, idUser: number, rating: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public postUsingPOST(idMovie: string, idUser: string, rating: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public postUsingPOST(idMovie: string, idUser: string, rating: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public postUsingPOST(idMovie: string, idUser: string, rating: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public postUsingPOST(idMovie: string, idUser: string, rating: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (idMovie === null || idMovie === undefined) {
             throw new Error('Required parameter idMovie was null or undefined when calling postUsingPOST.');
@@ -248,4 +254,67 @@ export class MovieAssessmentService {
         );
     }
 
+    /**
+     * Return all Assessment bundled into Response
+     * Return 204 if no data found
+     * @param idMovie idMovie
+     * @param idUser idUser
+     * @param rating rating
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+     public putUsingPOST(id_valoracion: number, movieAssessment: any, observe?: 'body', reportProgress?: boolean): Observable<any>;
+     public putUsingPOST(id_valoracion: number, movieAssessment: any, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+     public putUsingPOST(id_valoracion: number, movieAssessment: any, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+     public putUsingPOST(id_valoracion: number, movieAssessment: any, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+         console.log("da");
+         if (id_valoracion === null || id_valoracion === undefined) {
+             throw new Error('Required parameter idMovie was null or undefined when calling postUsingPOST.');
+         }
+
+         if (movieAssessment === null || movieAssessment === undefined) {
+             throw new Error('Required parameter idUser was null or undefined when calling postUsingPOST.');
+         }
+
+         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+         if (id_valoracion !== undefined && id_valoracion !== null) {
+             queryParameters = queryParameters.set('id', <any>id_valoracion);
+         }
+         if (movieAssessment !== undefined && movieAssessment !== null) {
+             queryParameters = queryParameters.set('movieAssessment', <any>movieAssessment);
+         }
+
+
+         let headers = this.defaultHeaders;
+
+         // authentication (JWT) required
+         if (this.configuration.apiKeys && this.configuration.apiKeys["Authorization"]) {
+             headers = headers.set('Authorization', this.configuration.apiKeys["Authorization"]);
+         }
+
+         // to determine the Accept header
+         let httpHeaderAccepts: string[] = [
+             '*/*'
+         ];
+         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+         if (httpHeaderAcceptSelected != undefined) {
+             headers = headers.set('Accept', httpHeaderAcceptSelected);
+         }
+
+         // to determine the Content-Type header
+         const consumes: string[] = [
+             'application/json'
+         ];
+
+         return this.httpClient.put<any>(`${this.basePath}/movieassessment/updateRated/`+ id_valoracion,
+                movieAssessment,
+             {
+                 params: queryParameters,
+                 withCredentials: this.configuration.withCredentials,
+                 headers: headers,
+                 observe: observe,
+                 reportProgress: reportProgress
+             }
+         );
+     }
 }

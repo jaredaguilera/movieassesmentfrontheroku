@@ -1,0 +1,35 @@
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: rgb(151, 69, 137);
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+ }
+ .cat {
+  height: 75px;
+  width: 55px;
+  display: block;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+ }
+
+::ng-deep .mat-sort-header-sorted {
+  color: rgb(189, 189, 0); /*change color of header*/
+}
+
+::ng-deep .mat-sort-header-arrow {
+  color: rgb(189, 189, 0); /*change color of arrow*/
+}
+
+::ng-deepth .mat-header-cell{
+  padding: 0;
+  border-bottom-width: 1px;
+  border-bottom-style: none;
+}
+

@@ -1,0 +1,181 @@
+  <div *ngIf="auth.user$ | async as user"class="container" style="margin-top: 70px;">
+    <div *ngIf="!user.email_verified" class="alert alert-warning" role="alert">
+      Para visualizar esta pagina, debes verificar tu correo.
+    </div>
+  <div *ngIf="user.email_verified" class="container" style="margin-top: 70px;">
+    <div class="invoice">
+      <h4 class="invoice-header">Busqueda de pelicula</h4>
+      <div class="invoice-body">
+          <form autocomplete="off" (ngSubmit)="onSearchTittleMovie( forma )" #forma="ngForm">
+            <div class="form-group row">
+              <label class="col-2 col-form-label">Nombre</label>
+              <div class="col-8">
+
+                <input class="form-control"
+                       type="text"
+                       name="name"
+                       placeholder="Nombre"
+                       [class.is-invalid]="name.invalid && name.touched"
+                       [ngModel]="movieSearch.name"
+                       required
+                       minlength="2"
+                       required
+                       #name="ngModel">
+                <small *ngIf="name.invalid && name.touched"
+                       class="form-text text-danger">Ingrese 2 letras</small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-2 col-form-label">Año de la pelicula</label>
+              <div class="col-8">
+
+                <input class="form-control"
+                       type="number"
+                       name="year"
+                       placeholder="Año"
+                       [class.is-invalid]="year.invalid && year.touched"
+                       [ngModel]="movieSearch.year"
+                       min="4"
+                       max="4"
+                       #year="ngModel">
+                <small *ngIf="year.invalid && year.touched"
+                       class="form-text text-danger">Ingrese un año correcto</small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-2 col-form-label">Tipo</label>
+              <div class="col-8">
+
+                <select class="form-control"
+                        name="type"
+                        [class.is-invalid]="type.invalid && type.touched"
+                        [ngModel]="movieSearch.type"
+                        #type="ngModel">
+                  <option *ngFor="let tipo of tipos"
+                          [value]="tipo.value">
+                    {{ tipo.name }}
+                  </option>
+                </select>
+
+              </div>
+            </div>
+
+
+            <div class="form-group row">
+              <label class="col-2 col-form-label">Resumen o Completo</label>
+              <div class="col-8">
+
+                <select class="form-control"
+                        name="shortOrFull"
+                        [class.is-invalid]="shortOrFull.invalid && shortOrFull.touched"
+                        [ngModel]="movieSearch.shortOrFull"
+                        #shortOrFull="ngModel">
+                  <option *ngFor="let shortOrFull of shortOrFulls"
+                          [value]="shortOrFull.value">
+                    {{ shortOrFull.name }}
+                  </option>
+                </select>
+
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-2 col-form-label">&nbsp;</label>
+              <div class="input-group col">
+                <button type="submit" class="btn btn-outline-primary btn-block">
+                  Buscar!
+                </button>
+              </div>
+            </div>
+          </form>
+      </div>
+    </div>
+    <br/>
+    <br/>
+    <div *ngIf="!loading && !errorMovie" class="col-lg-6">
+      <div class="invoice" >
+          <img style="float: left; margin-right: 15px;" src="{{responseMovie.Poster}}"  width="170" height="250" >
+          <h4 style="margin-bottom: 0.4em;">{{responseMovie.Title }}</h4>
+          <div class="clearfix">
+            <p>{{responseMovie.Plot}}<br><br>
+            </p>
+          </div>
+      </div>
+    </div>
+    <div *ngIf="!loading && errorMovie" class="col-lg-6">
+      <div class="invoice" >
+        <h4 style="margin-bottom: 0.4em;">{{errores.error.detail }}</h4>
+      </div>
+    </div>
+    <br/>
+    <br/>
+    <div class="invoice" *ngIf="!loading && !errorMovie" >
+        <h4 class="invoice-header">Ingrese valoracion</h4>
+        <div class="invoice-body">
+            <form autocomplete="off" (ngSubmit)="onAssessmentMovieSubmit( forma )" #forma="ngForm">
+              <div class="form-group row">
+                <div class="col-8">
+                  <input class="form-control"
+                         type="text"
+                         name="note"
+                         placeholder="Ingrese nota"
+                         [class.is-invalid]="note.invalid && note.touched"
+                         [ngModel]="note.n"
+                         min="1"
+                         max="3"
+                         #note="ngModel">
+                  <small *ngIf="note.invalid && note.touched"
+                         class="form-text text-danger">Ingrese un nota correcta</small>
+                </div>
+              </div>
+                <div class="form-group row">
+                  <div class="input-group col">
+                    <button type="submit" class="btn btn-outline-primary btn-block">
+                      Calificar!
+                    </button>
+                  </div>
+                  <br>
+                  <br>
+                  <small *ngIf="errorAssessment" >
+                       <label for="" class="is-invalid">{{errores}}</label>
+                  </small>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div>
+        <table mat-table [dataSource]="asessmentMovieList" matSort> matSort class="mat-elevation-z8">
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="url_imagen">
+            <th class="text-underline text-bold color-black"  mat-header-cell *matHeaderCellDef mat-sort-header  > Poster</th>
+            <td mat-cell *matCellDef="let element"> <img src="{{element.movie.url_imagen}}" class="cat" alt="..." > </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="nombre">
+            <th class="text-underline text-bold color-black"  mat-header-cell *matHeaderCellDef mat-sort-header > Nombre </th>
+            <td mat-cell *matCellDef="let element"> {{element.movie.nombre}} </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="nota">
+            <th class="text-underline text-bold color-black"  mat-header-cell *matHeaderCellDef mat-sort-header > Valoracion </th>
+            <td mat-cell *matCellDef="let element"> {{element.nota}} </td>
+          </ng-container>
+
+          <tr class="text-underline text-bold color-black" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+  </div>
+  <br/>
+  <br/>
+  <br/>
+</div>
+
+

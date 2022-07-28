@@ -11,10 +11,20 @@ import { environment } from '../environments/environment';
 import { MatTableModule } from '@angular/material/table'
 import { MatSortModule} from '@angular/material/sort'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HomeComponent } from './components/home/home.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { AppRoutingModule} from './app-routing.module';
+import { AuthModule } from '@auth0/auth0-angular';
+import { InitComponent } from './components/init/init.component';
+import { InfoComponent } from './components/info/info.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent,
+    NavbarComponent,
+    InitComponent,
+    InfoComponent
   ],
   imports: [
     BrowserModule,
@@ -26,6 +36,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatTableModule,
     MatSortModule,
     BrowserAnimationsModule,
+    AppRoutingModule,
+    AuthModule.forRoot({
+      domain: 'dev-q3dh7pu8.us.auth0.com',
+      clientId: 'pPRB7Y0BmdPFPrbXDgZE6RxYVCO2BoTq'
+    }),
     ],
   providers: [
     {
