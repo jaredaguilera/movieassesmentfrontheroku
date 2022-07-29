@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit , AfterViewInit{
     shortOrFull: '',
   };
   errorAssessment=false;
-
+  movieSubmit=false;
   tipos=[];
   shortOrFulls=[];
   note:{n:''};
@@ -120,8 +120,7 @@ export class HomeComponent implements OnInit , AfterViewInit{
             movieValored = element;
             update = true;
           }
-        });
-
+        })
         if(update){
           movieValored.nota = forma.controls.note.value;
           this.movieAssessmentService.putUsingPOST(movieValored.id_valoracion , movieValored).subscribe(x => {
@@ -131,6 +130,7 @@ export class HomeComponent implements OnInit , AfterViewInit{
           },
           error => {
             console.log(error.error.mensaje);
+
           });
         }else{
           this.movieAssessmentService.postUsingPOST(this.responseMovie.imdbID , this.userInfo.sub, forma.controls.note.value).subscribe(x => {
@@ -151,18 +151,21 @@ export class HomeComponent implements OnInit , AfterViewInit{
   get f() { return this.searchMovieForm.controls; }
 
   onSearchTittleMovie(forma: NgForm ) {
+    this.loading=true;
     console.log( forma );
     if(forma.valid){
-      this.loading = true;
+      this.movieSubmit=true;
       this.errorMovie = false;
       this.movieControllerService.getMovieTitleControllerUsingGET(forma.controls.name.value, forma.controls.shortOrFull.value , "json" , forma.controls.type.value, forma.controls.year.value,  ).subscribe(x => {
         this.responseMovie = x;
         console.log( this.responseMovie);
         this.loading = false;
+        this.movieSubmit=false;
       },
       error => {
         this.loading = false;
         this.errorMovie = true;
+        this.movieSubmit=false;
         this.errores=error;
         console.log(error.error.detail);
       });
