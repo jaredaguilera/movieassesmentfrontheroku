@@ -18,7 +18,7 @@
             "main": "projects/movieassesmentfrontheroku/src/main.ts",
             "polyfills": "projects/movieassesmentfrontheroku/src/polyfills.ts",
             "tsConfig": "projects/movieassesmentfrontheroku/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "projects/movieassesmentfrontheroku/src/favicon.ico",
               "projects/movieassesmentfrontheroku/src/assets"
