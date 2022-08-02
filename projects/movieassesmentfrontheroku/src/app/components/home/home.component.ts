@@ -1,14 +1,12 @@
 import { Component, OnInit ,ViewChild, AfterViewInit} from '@angular/core';
-import { FormBuilder, FormControl, FormGroup ,ReactiveFormsModule, NgForm } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup , NgForm } from '@angular/forms';
 import { MovieAssessmentService } from '../../../services/swaggerMovie/api/movieAssessment.service';
 import { MovieControllerService } from '../../../services/swaggerImdb/api/movieController.service';
 import { MovieResponse } from '../../../services/swaggerImdb/model/movieResponse'
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource} from '@angular/material/table';
+import {Sort} from '@angular/material/sort';
 import { AuthService } from '@auth0/auth0-angular';
-import { tap } from 'rxjs/internal/operators';
 
-interface movieAssessment
+interface MovieAssessment
 {
   id_valoracion: number,
   movie: {
@@ -40,6 +38,7 @@ export class HomeComponent implements OnInit , AfterViewInit{
   assessmentMovieForm: FormGroup;
   searchMovieForm: FormGroup;
   asessmentMovieList : any;
+  asessmentMovieListNotQualified : any;
   responseMovie : MovieResponse;
   loading: boolean;
   errorMovie: boolean;
@@ -58,9 +57,8 @@ export class HomeComponent implements OnInit , AfterViewInit{
   shortOrFulls=[];
   note:{n:''};
 
-  displayedColumns: string[] = ['url_imagen', 'nombre', 'nota'];
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-
+  sortedData: MovieAssessment[];
+  sortedDataNotQualified: MovieAssessment[];
   constructor(
     public auth: AuthService,
     private movieAssessmentService : MovieAssessmentService,
@@ -76,19 +74,78 @@ export class HomeComponent implements OnInit , AfterViewInit{
     this.auth.user$.subscribe(perfil=> {
         this.userInfo = perfil;
         console.log(perfil);
-        this.movieAssessmentService.listUsingGET(perfil.sub).subscribe(all => {
-          this.asessmentMovieList = new MatTableDataSource<movieAssessment>(all);
-          console.log(this.asessmentMovieList);
-          setTimeout(() => {
-            this.asessmentMovieList.sort = this.sort;
-          })
+        this.movieAssessmentService.listUsingGET().subscribe(all => {
+          this.asessmentMovieList = all.filter(xx => xx.id_usuario === perfil.sub);
+          this.asessmentMovieListNotQualified = all.filter(xx => xx.id_usuario !== perfil.sub);
+
+          let arrayFiltrado =  this.asessmentMovieListNotQualified.filter(objetoFecha =>
+            !this.asessmentMovieList.some(objetoCurso =>
+              objetoCurso.movie.nombre == objetoFecha.movie.nombre
+            )
+          )
+
+          arrayFiltrado = arrayFiltrado.filter((value, index, arr) => {
+            return index === arr.findIndex(obj => obj.movie.nombre === value.movie.nombre);
+          });
+
+          console.log(arrayFiltrado);
+          this.sortedData = this.asessmentMovieList.slice();
+          this.sortedDataNotQualified = arrayFiltrado.slice();
           this.ready=true;
-          console.log(this.asessmentMovieList);
-        })
+
+        },error=>{
+            console.log(error);
+        });
+
+
     });
-
-
   }
+
+  sortData(sort: Sort) {
+      const data = this.asessmentMovieList.slice();
+      if (!sort.active || sort.direction === '') {
+        this.sortedData = data;
+        return;
+      }
+
+      this.sortedData = data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        switch (sort.active) {
+          case 'nota':
+            return compare(a.nota, b.nota, isAsc);
+          case 'nombre':
+            return compare(a.movie.nombre, b.movie.nombre, isAsc);
+          case 'url_imagen':
+            return compare(a.movie.url_imagen, b.movie.url_imagen, isAsc);
+          default:
+            return 0;
+        }
+      });
+  }
+
+  //TODO refactorizar
+  sortDataQ(sort: Sort) {
+    const data = this.asessmentMovieListNotQualified.slice();
+    if (!sort.active || sort.direction === '') {
+      this.sortedDataNotQualified = data;
+      return;
+    }
+
+    this.sortedDataNotQualified = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'nota':
+          return compare(a.nota, b.nota, isAsc);
+        case 'nombre':
+          return compare(a.movie.nombre, b.movie.nombre, isAsc);
+        case 'url_imagen':
+          return compare(a.movie.url_imagen, b.movie.url_imagen, isAsc);
+        default:
+          return 0;
+      }
+    });
+}
+
 
   ngOnInit() {
     this.ready = false;
@@ -109,14 +166,15 @@ export class HomeComponent implements OnInit , AfterViewInit{
 
   }
 
-  onAssessmentMovieSubmit(forma: NgForm) {
+  onAssessmentMovieSubmit(forma: NgForm, element1?: any) {
       var update = false;
       var movieValored : any;
-      console.log(this.responseMovie.Title);
+
+
       console.log( forma );
       if(forma.valid && !isNaN(forma.controls.note.value) && forma.controls.note.value >= 0 &&forma.controls.note.value <= 1000){
-        this.asessmentMovieList.filteredData.forEach(element => {
-          if(element.movie.nombre == this.responseMovie.Title){
+        this.asessmentMovieList.forEach(element => {
+          if((this.responseMovie && element.movie.nombre == this.responseMovie.Title)||(element1 && element.movie.nombre == element1.movie.nombre)){
             movieValored = element;
             update = true;
           }
@@ -133,14 +191,31 @@ export class HomeComponent implements OnInit , AfterViewInit{
 
           });
         }else{
-          this.movieAssessmentService.postUsingPOST(this.responseMovie.imdbID , this.userInfo.sub, forma.controls.note.value).subscribe(x => {
-            console.log(x);
-            this.ngOnInit();
-            this.ngAfterViewInit();
-          },
-          error => {
-            console.log(error.error.mensaje);
-          });
+          if(!this.responseMovie){
+                //TODO corregir agregar id imdbID
+            this.movieControllerService.getMovieTitleControllerUsingGET(element1.movie.nombre , null , "json" , null, null,  ).subscribe(x => {
+                this.movieAssessmentService.postUsingPOST(x.imdbID , this.userInfo.sub, forma.controls.note.value).subscribe(x => {
+                  console.log(x);
+                  this.ngOnInit();
+                  this.ngAfterViewInit();
+                },
+                error => {
+                  console.log(error.error.mensaje);
+                });
+            },
+            error => {
+              console.log(error.error.detail);
+            });
+          }else{
+            this.movieAssessmentService.postUsingPOST(this.responseMovie.imdbID , this.userInfo.sub, forma.controls.note.value).subscribe(x => {
+              console.log(x);
+              this.ngOnInit();
+              this.ngAfterViewInit();
+            },
+            error => {
+              console.log(error.error.mensaje);
+            });
+          }
         }
       }else{
         this.errorAssessment=true;
@@ -173,3 +248,8 @@ export class HomeComponent implements OnInit , AfterViewInit{
   }
 
 }
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+}
+

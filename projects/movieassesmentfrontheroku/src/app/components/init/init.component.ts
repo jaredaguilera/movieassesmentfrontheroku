@@ -11,16 +11,21 @@ import { MovieAssessmentService } from 'projects/movieassesmentfrontheroku/src/s
 })
 export class InitComponent implements OnInit {
 
+  loading:any;
   movies: any;
   constructor(
     public auth: AuthService,
     private movieAssessmentService : MovieAssessmentService,
     private movieControllerService : MovieControllerService,
     private formBuilder: FormBuilder
-  ){}
+  ){
+    this.loading=false;
+  }
 
   ngOnInit() {
+    this.loading=true;
     this.movieAssessmentService.listUsingGET().subscribe(all => {
+      this.loading=false;
       var nuevoArray    = []
 	    var arrayTemporal = []
       var contador = 0;

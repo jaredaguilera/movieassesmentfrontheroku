@@ -9,7 +9,7 @@ const routes: Routes = [
   { path : 'home', component: HomeComponent, canActivate:[AuthGuard]},
   { path : 'init', component: InitComponent},
   { path : 'info', component: InfoComponent, canActivate:[AuthGuard]},
-  { path : '**', pathMatch: 'full' ,redirectTo: 'init'},
+  { path : '**' ,redirectTo: 'init'},
 ];
 
 @NgModule({
